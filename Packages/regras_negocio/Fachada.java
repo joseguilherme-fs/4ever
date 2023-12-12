@@ -100,20 +100,22 @@ public class Fachada {
 	            throw new Exception("Participante não existe.");
 	        }
 	        
-	        ArrayList<Ingresso> ingressos = participante.getIngressos();
+	        else if (participante.getIngressos().isEmpty()) {
+		        repositorio.participantes.remove(cpf);
+		        repositorio.salvarObjetos();
+	        }	
 	        
-	        if (!ingressos.isEmpty()) {
-				
-		        if (verificarIngressoValido(participante)) {
-		        	throw new Exception("Este participante ainda tem ingressos válidos");	
-				}
-		        else {
+	        else if (verificarIngressoValido(participante)) {
+		        throw new Exception("Este participante ainda tem ingressos válidos");	
+			
+		    }else {
 			        apagarTodosIngressos(cpf);
 			        repositorio.participantes.remove(cpf);
-		        } 
-	        }
+			        repositorio.salvarObjetos();
+		     } 
+
 	        
-	        repositorio.salvarObjetos();
+	        
 	        
 	    }
 	 
@@ -195,7 +197,7 @@ public class Fachada {
 		 // Remove os ingressos do repositório:
 		 for (Ingresso ingresso : ingressosRemover) {	 
 			 repositorio.ingressos.remove(ingresso.getCodigo());
-			 ingresso.setParticipante(null);
+//			 ingresso.setParticipante(null);
 		 }
 	 }
 
